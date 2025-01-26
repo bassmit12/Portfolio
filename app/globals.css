@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 201, 209, 217;
+    --background-rgb: 13, 17, 23;
+    --accent-rgb: 88, 166, 255;
+    --radius: 0.5rem;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: rgb(var(--background-rgb));
+}
+
+.dark {
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--background-rgb));
+    --tw-text-opacity: 1;
+    color: rgb(var(--foreground-rgb));
+}
