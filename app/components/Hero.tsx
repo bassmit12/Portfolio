@@ -9,7 +9,7 @@ import {
   Code,
   ChevronDown,
 } from "lucide-react";
-import AnimatedCode from "./Animated-code";
+import AnimatedCode from "./AnimatedCode";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { useScroll } from "../hooks/useScroll";

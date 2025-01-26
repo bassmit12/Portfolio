@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import FloatingNavbar from "./components/Floating-navbar";
-import TracingBeam from "./components/Tracing-beam";
+import FloatingNavbar from "./components/FloatingNavbar";
+import TracingBeam from "./components/TracingBeam";
 
 const inter = Inter({ subsets: ["latin"] });
 
