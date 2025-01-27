@@ -55,7 +55,10 @@ export default function TracingBeam() {
   );
 
   return (
-    <div ref={ref} className="fixed left-4 top-0 bottom-0 w-12 z-20">
+    <div
+      ref={ref}
+      className="fixed left-4 top-0 bottom-0 w-12 z-20 hidden md:block"
+    >
       <div className="h-full w-full relative">
         <motion.div className="absolute w-full" style={{ y }}>
           <div

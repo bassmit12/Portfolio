@@ -1,10 +1,12 @@
+// Projects.tsx
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useWindowSize } from "../hooks/useWindowSize";
+import StarBackground from "./StarBackground";
 
 interface Project {
   title: string;
@@ -42,9 +44,8 @@ const projects: Project[] = [
 ];
 
 export default function Projects() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const { windowSize, isMounted } = useWindowSize();
+  const { isMounted } = useWindowSize();
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -58,36 +59,15 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="min-h-screen relative overflow-hidden py-20"
+      className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={sectionRef}
     >
-      <div className="absolute inset-0 bg-[#0d1117]">
-        {[...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            initial={{
-              x: Math.random() * windowSize.width,
-              y: Math.random() * windowSize.height,
-              opacity: Math.random() * 0.5 + 0.3,
-            }}
-            animate={{
-              opacity: [0.3, 1, 0.3],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: Math.random() * 3 + 2,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
-            }}
-          />
-        ))}
-      </div>
+      <StarBackground count={50} />
 
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="text-center mb-12">
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
+        <div className="text-center mb-8 md:mb-12">
           <motion.h2
-            className="text-4xl font-bold mb-4 text-[#58a6ff]"
+            className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 text-[#58a6ff]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -95,7 +75,7 @@ export default function Projects() {
             Cosmic Creations
           </motion.h2>
           <motion.p
-            className="text-[#8b949e] text-lg"
+            className="text-base md:text-lg text-[#8b949e]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -105,7 +85,7 @@ export default function Projects() {
         </div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           style={{ opacity, y }}
         >
           {projects.map((project, index) => (
@@ -115,10 +95,9 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
+              whileHover={{ y: -5 }}
             >
-              <div className="relative w-full h-48">
+              <div className="relative w-full h-40 md:h-48">
                 <Image
                   src={project.image}
                   alt={project.title}
@@ -126,12 +105,7 @@ export default function Projects() {
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <motion.div
-                  className="absolute inset-0 bg-[#0d1117]/80 flex items-center justify-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.div className="absolute inset-0 bg-[#0d1117]/80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                   <div className="flex space-x-4">
                     <motion.a
                       href={project.github}
@@ -141,7 +115,7 @@ export default function Projects() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      <Github className="w-8 h-8" />
+                      <Github className="w-6 h-6 md:w-8 md:h-8" />
                     </motion.a>
                     {project.live && (
                       <motion.a
@@ -152,22 +126,24 @@ export default function Projects() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <ExternalLink className="w-8 h-8" />
+                        <ExternalLink className="w-6 h-6 md:w-8 md:h-8" />
                       </motion.a>
                     )}
                   </div>
                 </motion.div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-[#58a6ff]">
+              <div className="p-4 md:p-6">
+                <h3 className="text-lg md:text-xl font-semibold mb-2 text-[#58a6ff]">
                   {project.title}
                 </h3>
-                <p className="text-[#8b949e] mb-4">{project.description}</p>
+                <p className="text-sm md:text-base text-[#8b949e] mb-4">
+                  {project.description}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="text-xs bg-[#238636] text-white px-2 py-1 rounded-full"
+                      className="text-xs px-2 py-1 bg-[#238636] text-white rounded-full"
                     >
                       {tech}
                     </span>

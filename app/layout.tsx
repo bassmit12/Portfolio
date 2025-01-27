@@ -18,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className={`${inter.className} bg-[#0d1117] text-[#c9d1d9] pl-16`}>
+      <body
+        className={`${inter.className} bg-[#0d1117] text-[#c9d1d9] md:pl-16 pl-0`}
+      >
         <FloatingNavbar />
         <TracingBeam />
         {children}
