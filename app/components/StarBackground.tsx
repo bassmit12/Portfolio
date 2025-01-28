@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Star {
   x: number;
@@ -13,58 +14,70 @@ interface Star {
 export default function StarBackground({ count = 200 }) {
   const [mounted, setMounted] = useState(false);
   const [stars, setStars] = useState<Star[]>([]);
+  const { windowSize } = useWindowSize();
+
+  // Determine star count based on screen width
+  const starCount = windowSize.width < 768 ? 100 : count;
+
+  const generateStars = useCallback(() => {
+    const body = document.body;
+    const html = document.documentElement;
+    const height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+    );
+    const width = window.innerWidth;
+
+    const newStars: Star[] = [];
+    for (let i = 0; i < starCount; i++) {
+      newStars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 2 + 2,
+        color: getStarColor(),
+      });
+    }
+    setStars(newStars);
+  }, [starCount]);
 
   useEffect(() => {
     setMounted(true);
-    const generateStars = () => {
-      const body = document.body;
-      const html = document.documentElement;
-      const height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight,
-      );
-      const width = window.innerWidth;
-
-      const newStars: Star[] = [];
-      for (let i = 0; i < count; i++) {
-        newStars.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          // Increased size range from 1-3 to 2-4 pixels
-          size: Math.random() * 2 + 2,
-          color: getStarColor(),
-        });
-      }
-      setStars(newStars);
-    };
-
-    const updateStars = () => {
-      generateStars();
-    };
-
     generateStars();
-    window.addEventListener("resize", updateStars);
 
-    // Update stars when content might change
-    const observer = new MutationObserver(updateStars);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        generateStars();
+      }, 250); // Debounce resize events
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Use ResizeObserver instead of MutationObserver
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        generateStars();
+      }, 250);
     });
 
+    resizeObserver.observe(document.body);
+
     return () => {
-      window.removeEventListener("resize", updateStars);
-      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
+      clearTimeout(resizeTimer);
     };
-  }, [count]);
+  }, [generateStars]);
 
   if (!mounted) return <div className="absolute inset-0 bg-[#0d1117]" />;
 
   return (
-    <div className="absolute inset-0 bg-[#0d1117] min-h-full">
+    <div className="fixed inset-0 bg-[#0d1117] overflow-hidden">
       {stars.map((star, i) => (
         <motion.div
           key={i}
@@ -82,7 +95,7 @@ export default function StarBackground({ count = 200 }) {
           }}
           transition={{
             duration: Math.random() * 3 + 2,
-            repeat: Number.POSITIVE_INFINITY,
+            repeat: Infinity,
             repeatType: "reverse",
           }}
         />
