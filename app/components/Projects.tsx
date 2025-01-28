@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useWindowSize } from "../hooks/useWindowSize";
-import StarBackground from "./StarBackground";
 
 interface Project {
   title: string;
@@ -62,8 +61,6 @@ export default function Projects() {
       className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={sectionRef}
     >
-      <StarBackground count={50} />
-
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="text-center mb-8 md:mb-12">
           <motion.h2

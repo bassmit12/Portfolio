@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
 import { Send } from "lucide-react";
 import { useWindowSize } from "../hooks/useWindowSize";
-import StarBackground from "./StarBackground";
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,8 +36,6 @@ export default function Contact() {
       className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={formRef}
     >
-      <StarBackground count={100} />
-
       <motion.div
         className="relative z-10 container mx-auto px-4 md:px-6"
         style={{ opacity, y }}
@@ -127,29 +124,6 @@ export default function Contact() {
           </motion.form>
         </div>
       </motion.div>
-
-      {/* Floating asteroids */}
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1.5 h-1.5 md:w-2 md:h-2 bg-[#30363d] rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            x: [0, Math.random() * 100 - 50],
-            y: [0, Math.random() * 100 - 50],
-            rotate: 360,
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-            ease: "linear",
-          }}
-        />
-      ))}
     </section>
   );
 }

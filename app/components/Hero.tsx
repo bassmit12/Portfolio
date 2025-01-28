@@ -14,7 +14,6 @@ import AnimatedCode from "./AnimatedCode";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { useScroll } from "../hooks/useScroll";
-import StarBackground from "./StarBackground";
 
 export default function Hero() {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -41,8 +40,6 @@ export default function Hero() {
       id="top"
       className="min-h-screen relative overflow-hidden pt-20 md:pt-32"
     >
-      <StarBackground count={100} />
-
       <div className="relative z-10 container mx-auto px-4 md:px-6 py-10 md:py-20">
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>

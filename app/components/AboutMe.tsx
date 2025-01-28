@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { Code, Rocket, Brain, Coffee } from "lucide-react";
 import Image from "next/image";
 import { useWindowSize } from "../hooks/useWindowSize";
-import StarBackground from "./StarBackground";
 
 export default function AboutMe() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -39,8 +38,6 @@ export default function AboutMe() {
       className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={sectionRef}
     >
-      <StarBackground count={50} />
-
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <motion.div
           className="text-center mb-8 md:mb-12"
