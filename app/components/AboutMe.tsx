@@ -21,7 +21,7 @@ export default function AboutMe() {
       icon: <Rocket className="w-5 h-5 md:w-6 md:h-6" />,
     },
     {
-      name: "Machine Learning",
+      name: "Artificial Intelligence",
       icon: <Brain className="w-5 h-5 md:w-6 md:h-6" />,
     },
     {
@@ -66,7 +66,7 @@ export default function AboutMe() {
             className="flex justify-center md:justify-start"
           >
             <Image
-              src="/assets/Profile_avatar_placeholder_large.png"
+              src="/assets/Bas_Smit.jpg"
               alt="Bas Smit"
               width={200}
               height={200}
@@ -85,12 +85,12 @@ export default function AboutMe() {
               Bas Smit
             </h3>
             <p className="text-sm md:text-base text-[#8b949e] mb-6">
-              I&apos;m a passionate software engineer with a love for creating
-              innovative solutions. With a background in both frontend and
-              backend development, I enjoy tackling complex problems and turning
-              ideas into reality. When I&apos;m not coding, you can find me
-              exploring new technologies, contributing to open-source projects,
-              or stargazing on clear nights.
+              I&apos;m a software engineer with a love for creating innovative
+              solutions. With a background in both frontend and backend
+              development, I enjoy tackling complex problems and turning ideas
+              into reality. When I&apos;m not coding, you can find me exploring
+              new technologies, contributing to open-source projects, or
+              stargazing on clear nights.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {skills.map((skill, index) => (

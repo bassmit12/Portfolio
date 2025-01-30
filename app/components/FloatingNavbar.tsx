@@ -135,7 +135,7 @@ export default function FloatingNavbar() {
                 <Github className="w-5 h-5" />
               </motion.a>
               <motion.a
-                href="https://twitter.com/yourusername"
+                href="https://x.com/SmitBas"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#c9d1d9] hover:text-[#58a6ff] transition-colors rounded-full p-1 hover:bg-[#58a6ff]/10"

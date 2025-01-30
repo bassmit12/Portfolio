@@ -52,12 +52,12 @@ export default function Hero() {
               <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">
                 <span className="text-[#58a6ff]">Hello, </span>
                 <br />
-                I&apos;m a Software Engineer
+                My name is Bas Smit
               </h1>
               <p className="text-lg md:text-xl text-[#8b949e] mb-6 md:mb-8 leading-relaxed">
-                Passionate about building efficient and innovative solutions.
-                Experienced in full-stack development with a focus on modern web
-                technologies.
+                And I&apos;m a software engineer passionate about building
+                efficient and innovative solutions. Experienced in full-stack
+                development with a focus on modern web technologies.
               </p>
               <div className="flex justify-center lg:justify-start items-center gap-4 md:gap-6 mb-8 md:mb-12">
                 <motion.a
