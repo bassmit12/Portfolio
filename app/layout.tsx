@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import FloatingNavbar from "./components/FloatingNavbar";
 import TracingBeam from "./components/TracingBeam";
 import StarBackground from "./components/StarBackground";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         className={`${inter.className} text-[#c9d1d9] md:pl-16 pl-0 relative`}
       >
         <StarBackground count={350} />
+        <Analytics />
         <div className="relative z-[1]">
           <FloatingNavbar />
           <TracingBeam />
