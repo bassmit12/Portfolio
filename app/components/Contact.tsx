@@ -6,11 +6,26 @@ import { useState, useRef } from "react";
 import { Send } from "lucide-react";
 import { useWindowSize } from "../hooks/useWindowSize";
 
+declare global {
+  interface Window {
+    grecaptcha: {
+      enterprise: {
+        ready: (callback: () => void) => void;
+        execute: (
+          siteKey: string,
+          options: { action: string },
+        ) => Promise<string>;
+      };
+    };
+  }
+}
+
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { isMounted } = useWindowSize();
+
   const { scrollYProgress } = useScroll({
     target: formRef,
     offset: ["start end", "end start"],
@@ -22,10 +37,48 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setSubmitted(true);
+
+    try {
+      // Get form data
+      // const formData = new FormData(e.currentTarget);
+      // const formValues = Object.fromEntries(formData.entries());
+
+      // Execute reCAPTCHA
+      await new Promise<void>((resolve) => {
+        window.grecaptcha.enterprise.ready(() => resolve());
+      });
+
+      const token = await window.grecaptcha.enterprise.execute(
+        "6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y", // Replace with your site key
+        { action: "submit_contact" },
+      );
+
+      // Verify token
+      const verifyResponse = await fetch("/api/verify-recaptcha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      const verifyResult = await verifyResponse.json();
+
+      if (!verifyResult.success || !verifyResult.isHuman) {
+        throw new Error("reCAPTCHA verification failed");
+      }
+
+      // If verification successful, proceed with form submission
+      // Add your form submission logic here
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Form submission error:", error);
+      alert("There was an error submitting the form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isMounted) return null;
@@ -36,6 +89,7 @@ export default function Contact() {
       className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={formRef}
     >
+      {/* Rest of the JSX remains the same */}
       <motion.div
         className="relative z-10 container mx-auto px-4 md:px-6"
         style={{ opacity, y }}
@@ -74,6 +128,7 @@ export default function Contact() {
               <input
                 type="text"
                 id="name"
+                name="name"
                 required
                 className="w-full px-3 md:px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] transition-colors text-sm md:text-base"
               />
@@ -85,6 +140,7 @@ export default function Contact() {
               <input
                 type="email"
                 id="email"
+                name="email"
                 required
                 className="w-full px-3 md:px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] transition-colors text-sm md:text-base"
               />
@@ -98,6 +154,7 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                name="message"
                 required
                 rows={4}
                 className="w-full px-3 md:px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] transition-colors resize-none text-sm md:text-base"

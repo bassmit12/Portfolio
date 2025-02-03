@@ -21,6 +21,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark scroll-smooth">
+      <head>
+        <script
+          src="https://www.google.com/recaptcha/enterprise.js?render=6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y"
+          async
+          defer
+        ></script>
+      </head>
       <body
         className={`${inter.className} text-[#c9d1d9] md:pl-16 pl-0 relative`}
       >
