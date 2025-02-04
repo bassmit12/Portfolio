@@ -66,11 +66,11 @@ export default function AboutMe() {
             className="flex justify-center md:justify-start"
           >
             <Image
-              src="/assets/Bas_Smit.jpg"
+              src="/assets/Bas_Smit_Enhanced.png"
               alt="Bas Smit"
               width={200}
               height={200}
-              className="rounded-full object-cover border-4 border-[#58a6ff] w-48 h-48 md:w-64 md:h-64 brightness-[0.85]"
+              className="rounded-full object-cover border-4 border-[#58a6ff] w-48 h-48 md:w-64 md:h-64 "
             />
           </motion.div>
 
