@@ -1,4 +1,3 @@
-// components/TracingBeam.tsx
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -8,17 +7,34 @@ export default function TracingBeam() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const [containerHeight, setContainerHeight] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false); // Add this state
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const MARGIN = 200;
 
+  // Track scroll direction
   useEffect(() => {
-    // Set initial loaded state
-    setIsLoaded(true);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollDirection(currentScrollY > lastScrollY ? "down" : "up");
+      setLastScrollY(currentScrollY);
+    };
 
-    // Initial setup
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]); // Keep lastScrollY in dependencies
+
+  // Handle container setup and image preloading
+  useEffect(() => {
+    // Preload rocket image
+    const rocketImage = new Image();
+    rocketImage.src =
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Rocket-5cPEjxlJMX6ijuMrqk9RV3ydVQIDTz.gif";
+    rocketImage.onload = () => {
+      setIsLoaded(true);
+    };
+
     const updateContainerHeight = () => {
       setContainerHeight(window.innerHeight - MARGIN * 2);
     };
@@ -26,7 +42,6 @@ export default function TracingBeam() {
     updateContainerHeight();
     const currentRef = ref.current;
 
-    // Resize Observer setup
     const resizeObserver = new ResizeObserver(() => {
       updateContainerHeight();
     });
@@ -35,26 +50,12 @@ export default function TracingBeam() {
       resizeObserver.observe(currentRef);
     }
 
-    // Scroll handler
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollDirection(currentScrollY > lastScrollY ? "down" : "up");
-      setLastScrollY(currentScrollY);
-    };
-
-    // Set initial scroll position
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Cleanup
     return () => {
       if (currentRef) {
         resizeObserver.unobserve(currentRef);
       }
-      window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY]);
+  }, []); // Empty dependencies for setup effect
 
   const y = useTransform(
     scrollYProgress,
@@ -62,7 +63,6 @@ export default function TracingBeam() {
     [MARGIN, containerHeight + MARGIN],
   );
 
-  // Don't render until everything is loaded
   if (!isLoaded) return null;
 
   return (
@@ -74,7 +74,7 @@ export default function TracingBeam() {
         <motion.div
           className="absolute w-full"
           style={{ y }}
-          initial={{ y: MARGIN }} // Add initial position
+          initial={{ y: MARGIN }}
         >
           <div
             className="w-14 h-14 relative transition-transform duration-300"
