@@ -24,3 +24,7 @@ body {
     --tw-text-opacity: 1;
     color: rgb(var(--foreground-rgb));
 }
+
+.grecaptcha-badge {
+    visibility: hidden;
+}

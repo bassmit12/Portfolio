@@ -81,7 +81,6 @@ export default function Contact() {
       setSubmitted(true);
       console.log("Form submitted successfully");
     } catch (error: unknown) {
-      // Type guard for Error object
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred";
       const errorStack = error instanceof Error ? error.stack : undefined;
@@ -105,7 +104,6 @@ export default function Contact() {
       className="min-h-screen relative overflow-hidden py-16 md:py-20"
       ref={formRef}
     >
-      {/* Rest of the JSX remains the same */}
       <motion.div
         className="relative z-10 container mx-auto px-4 md:px-6"
         style={{ opacity, y }}
@@ -194,6 +192,29 @@ export default function Contact() {
                 </>
               )}
             </motion.button>
+
+            {/* reCAPTCHA Privacy Notice */}
+            <p className="text-xs text-[#8b949e] text-center mt-4">
+              This site is protected by reCAPTCHA and the Google{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#58a6ff] hover:underline"
+              >
+                Privacy Policy
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://policies.google.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#58a6ff] hover:underline"
+              >
+                Terms of Service
+              </a>{" "}
+              apply.
+            </p>
           </motion.form>
         </div>
       </motion.div>
