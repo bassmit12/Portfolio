@@ -63,7 +63,7 @@ export default function Hero() {
                 <motion.a
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  href="https://github.com/yourusername"
+                  href="https://github.com/bassmit12"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#8b949e] hover:text-[#58a6ff] transition-colors"
@@ -73,7 +73,7 @@ export default function Hero() {
                 <motion.a
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  href="https://linkedin.com/in/yourusername"
+                  href="https://www.linkedin.com/in/bas-smit-914145340/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#8b949e] hover:text-[#58a6ff] transition-colors"
@@ -83,7 +83,7 @@ export default function Hero() {
                 <motion.a
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  href="mailto:your.email@example.com"
+                  href="mailto:bas.smit@live.nl"
                   className="text-[#8b949e] hover:text-[#58a6ff] transition-colors"
                 >
                   <Mail className="w-6 h-6" />
