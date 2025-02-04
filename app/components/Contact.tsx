@@ -40,20 +40,24 @@ export default function Contact() {
 
     try {
       // Get form data
-      // const formData = new FormData(e.currentTarget);
-      // const formValues = Object.fromEntries(formData.entries());
+      const formData = new FormData(e.currentTarget);
+      const formValues = Object.fromEntries(formData.entries());
+      console.log("Form values:", formValues);
 
       // Execute reCAPTCHA
+      console.log("Executing reCAPTCHA...");
       await new Promise<void>((resolve) => {
         window.grecaptcha.enterprise.ready(() => resolve());
       });
 
       const token = await window.grecaptcha.enterprise.execute(
-        "6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y", // Replace with your site key
+        "6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y",
         { action: "submit_contact" },
       );
+      console.log("Got reCAPTCHA token:", token.substring(0, 20) + "...");
 
       // Verify token
+      console.log("Sending verification request...");
       const verifyResponse = await fetch("/api/verify-recaptcha", {
         method: "POST",
         headers: {
@@ -63,19 +67,31 @@ export default function Contact() {
       });
 
       const verifyResult = await verifyResponse.json();
+      console.log("Verification result:", verifyResult);
 
       if (!verifyResult.success || !verifyResult.isHuman) {
-        throw new Error("reCAPTCHA verification failed");
+        console.error("Verification failed:", verifyResult);
+        throw new Error(`reCAPTCHA verification failed: ${verifyResult.error}`);
       }
 
       // If verification successful, proceed with form submission
-      // Add your form submission logic here
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+      console.log("Verification successful, submitting form...");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       setSubmitted(true);
-    } catch (error) {
-      console.error("Form submission error:", error);
-      alert("There was an error submitting the form. Please try again.");
+      console.log("Form submitted successfully");
+    } catch (error: unknown) {
+      // Type guard for Error object
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      console.error("Detailed form submission error:", {
+        message: errorMessage,
+        stack: errorStack,
+        error,
+      });
+      alert(`There was an error submitting the form: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
