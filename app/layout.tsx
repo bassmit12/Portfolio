@@ -5,6 +5,7 @@ import FloatingNavbar from "./components/FloatingNavbar";
 import TracingBeam from "./components/TracingBeam";
 import StarBackground from "./components/StarBackground";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
-        <script
-          src="https://www.google.com/recaptcha/enterprise.js?render=6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y"
-          async
-          defer
-        ></script>
+        <Script
+          src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+          strategy="afterInteractive"
+        />
       </head>
       <body
         className={`${inter.className} text-[#c9d1d9] md:pl-16 pl-0 relative`}

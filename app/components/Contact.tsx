@@ -1,4 +1,4 @@
-// Contact.tsx
+// components/Contact.tsx
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -23,6 +23,7 @@ declare global {
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { isMounted } = useWindowSize();
 
@@ -37,60 +38,67 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     try {
-      // Get form data
-      const formData = new FormData(e.currentTarget);
-      const formValues = Object.fromEntries(formData.entries());
-      console.log("Form values:", formValues);
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+      const formValues = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        message: formData.get("message"),
+      };
+
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+      if (!siteKey) {
+        throw new Error("reCAPTCHA site key is not configured");
+      }
 
       // Execute reCAPTCHA
-      console.log("Executing reCAPTCHA...");
-      await new Promise<void>((resolve) => {
-        window.grecaptcha.enterprise.ready(() => resolve());
+      const token = await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.enterprise.ready(() => {
+          window.grecaptcha.enterprise
+            .execute(siteKey, { action: "submit_contact" })
+            .then(resolve)
+            .catch(reject);
+        });
       });
 
-      const token = await window.grecaptcha.enterprise.execute(
-        "6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y",
-        { action: "submit_contact" },
-      );
       console.log("Got reCAPTCHA token:", token.substring(0, 20) + "...");
 
-      // Verify token
-      console.log("Sending verification request...");
+      // Verify reCAPTCHA
       const verifyResponse = await fetch("/api/verify-recaptcha", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       });
 
       const verifyResult = await verifyResponse.json();
-      console.log("Verification result:", verifyResult);
 
       if (!verifyResult.success || !verifyResult.isHuman) {
-        console.error("Verification failed:", verifyResult);
-        throw new Error(`reCAPTCHA verification failed: ${verifyResult.error}`);
+        throw new Error(verifyResult.error || "reCAPTCHA verification failed");
       }
 
-      // If verification successful, proceed with form submission
-      console.log("Verification successful, submitting form...");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Send email
+      const emailResponse = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formValues),
+      });
+
+      const emailResult = await emailResponse.json();
+
+      if (!emailResult.success) {
+        throw new Error(emailResult.error || "Failed to send email");
+      }
 
       setSubmitted(true);
-      console.log("Form submitted successfully");
-    } catch (error: unknown) {
+      form.reset();
+    } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred";
-      const errorStack = error instanceof Error ? error.stack : undefined;
-
-      console.error("Detailed form submission error:", {
-        message: errorMessage,
-        stack: errorStack,
-        error,
-      });
-      alert(`There was an error submitting the form: ${errorMessage}`);
+      console.error("Form submission error:", error);
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -174,6 +182,11 @@ export default function Contact() {
                 className="w-full px-3 md:px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff] transition-colors resize-none text-sm md:text-base"
               />
             </div>
+
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
+
             <motion.button
               type="submit"
               disabled={isSubmitting || submitted}

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       assessment: {
         event: {
           token,
-          siteKey: "6Ldn9csqAAAAAEJggqDQSTp7yXzZSlbW13a09s3Y",
+          siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
           expectedAction: "submit_contact",
         },
       },
