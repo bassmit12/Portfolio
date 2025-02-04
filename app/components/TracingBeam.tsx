@@ -1,3 +1,4 @@
+// components/TracingBeam.tsx
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -9,10 +10,14 @@ export default function TracingBeam() {
   const [containerHeight, setContainerHeight] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false); // Add this state
 
   const MARGIN = 200;
 
   useEffect(() => {
+    // Set initial loaded state
+    setIsLoaded(true);
+
     // Initial setup
     const updateContainerHeight = () => {
       setContainerHeight(window.innerHeight - MARGIN * 2);
@@ -37,6 +42,9 @@ export default function TracingBeam() {
       setLastScrollY(currentScrollY);
     };
 
+    // Set initial scroll position
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
 
     // Cleanup
@@ -46,7 +54,7 @@ export default function TracingBeam() {
       }
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY]); // Include lastScrollY in dependencies
+  }, [lastScrollY]);
 
   const y = useTransform(
     scrollYProgress,
@@ -54,13 +62,20 @@ export default function TracingBeam() {
     [MARGIN, containerHeight + MARGIN],
   );
 
+  // Don't render until everything is loaded
+  if (!isLoaded) return null;
+
   return (
     <div
       ref={ref}
       className="fixed left-4 top-0 bottom-0 w-12 z-20 hidden md:block"
     >
       <div className="h-full w-full relative">
-        <motion.div className="absolute w-full" style={{ y }}>
+        <motion.div
+          className="absolute w-full"
+          style={{ y }}
+          initial={{ y: MARGIN }} // Add initial position
+        >
           <div
             className="w-14 h-14 relative transition-transform duration-300"
             style={{
